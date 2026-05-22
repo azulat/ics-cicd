@@ -1,0 +1,40 @@
+version: 2.1
+
+jobs:
+  build:
+    docker:
+      - image: cimg/node:current
+    steps:
+      - checkout
+      - run:
+          name: Install dependencies
+          command: npm install
+      - run:
+          name: Lint/Check (Optional)
+          command: |
+            echo "No tests or linting configured yet."
+            # Add linting or test commands here if they are added to package.json
+
+  deploy:
+    docker:
+      - image: cimg/base:stable
+    steps:
+      - checkout
+      - run:
+          name: Deploy to Production
+          command: |
+            echo "Deploying project..."
+            # Replace with your actual deployment command (e.g., S3, Firebase, Heroku, etc.)
+            # Example for Firebase: npm install -g firebase-tools && firebase deploy --token "$FIREBASE_TOKEN"
+
+workflows:
+  version: 2
+  build_and_deploy:
+    jobs:
+      - build
+      - deploy:
+          requires:
+            - build
+          filters:
+            branches:
+              only: main
