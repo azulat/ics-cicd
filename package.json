@@ -1,0 +1,12 @@
+{
+  "name": "hola-mundo-html",
+  "version": "1.0.0",
+  "description": "Un hola mundo básico en HTML",
+  "main": "index.html",
+  "scripts": {
+    "start": "npx serve ."
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
