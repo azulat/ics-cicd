@@ -6,26 +6,45 @@ jobs:
       - image: cimg/node:current
     steps:
       - checkout
+      # Instalamos dependencias
       - run:
           name: Install dependencies
           command: npm install
+      # Ejecutamos tests (descomenta si ya tienes un script de test configurado)
       - run:
-          name: Lint/Check (Optional)
+          name: Run Tests / Linting
           command: |
-            echo "No tests or linting configured yet."
-            # Add linting or test commands here if they are added to package.json
+            if npm run | grep -q test; then
+              npm run test
+            else
+              echo No se encontró un script de test en package.json. Saltando...
+            fi
+      # Persistimos el directorio de trabajo para que el job de deploy tenga acceso a los archivos
+      - persist_to_workspace:
+          root: .
+          paths:
+            - .
 
   deploy:
     docker:
-      - image: cimg/base:stable
+      - image: cimg/node:current # Usamos Node también aquí para tener soporte nativo de npm
     steps:
-      - checkout
+      # Recuperamos los archivos del paso anterior (ahorramos tiempo de checkout e install)
+      - attach_workspace:
+          at: .
       - run:
-          name: Deploy to Production
+          name: Install Vercel CLI
+          command: sudo npm install -g vercel
+      - run:
+          name: Deploy to Vercel
           command: |
-            echo "Deploying project..."
-            # Replace with your actual deployment command (e.g., S3, Firebase, Heroku, etc.)
-            # Example for Firebase: npm install -g firebase-tools && firebase deploy --token "$FIREBASE_TOKEN"
+            if [  = main ]; then
+              echo Desplegando en Producción...
+              vercel deploy --prod --token= --yes
+            else
+              echo Desplegando Preview para la rama ...
+              vercel deploy --token= --yes
+            fi
 
 workflows:
   version: 2
@@ -35,6 +54,6 @@ workflows:
       - deploy:
           requires:
             - build
-          filters:
-            branches:
-              only: main
+          # Quitamos el filtro 'only: main' para que las ramas secundarias 
+          # también se desplieguen como 'Previews' de Vercel. 
+          # La lógica dentro del job de deploy sabrá si es producción o no.
