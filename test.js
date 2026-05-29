@@ -2,65 +2,64 @@ const fs = require('fs');
 const assert = require('assert');
 const test = require('node:test');
 
-test('Validación del saludo en index.html', () => {
-    // 1. Leer el archivo HTML
+// Helper para extraer de forma segura el texto de #main-title
+function getTitleText() {
     const htmlContent = fs.readFileSync('index.html', 'utf8');
-
-    // 2. Extraer el texto de #main-title
     const match = htmlContent.match(/<h1 id="main-title">(.*?)<\/h1>/);
     assert.ok(match, 'No se encontró el elemento con ID main-title (<h1 id="main-title">...</h1>)');
-    
-    const text = match[1];
-    console.log(`Texto a evaluar: "${text}"`);
+    return match[1];
+}
 
-    // Regla 1: Misma cantidad de ¡ al principio que ! al final.
+test('1. Misma cantidad de ¡ al principio que ! al final', () => {
+    const text = getTitleText();
     const startExclamations = (text.match(/^¡+/) || [''])[0].length;
     const endExclamations = (text.match(/!+$/) || [''])[0].length;
     assert.strictEqual(
         startExclamations, 
         endExclamations, 
-        `El mensaje debe tener la misma cantidad de '¡' al principio (${startExclamations}) que '!' al final (${endExclamations}).`
+        `El mensaje tiene '${startExclamations}' signos '¡' al principio y '${endExclamations}' signos '!' al final.`
     );
+});
 
-    // Limpiamos el texto de los signos de exclamación externos para evaluar las palabras
+test('2. La primera palabra debe empezar con mayúscula', () => {
+    const text = getTitleText();
     const cleanText = text.replace(/^¡+/, '').replace(/!+$/, '').trim();
-
-    // Regla 2: La primera palabra empiece con mayúscula.
     const firstChar = cleanText.charAt(0);
     assert.match(
         firstChar, 
         /^[A-ZÁÉÍÓÚÑ]/, 
-        `La primera palabra debe empezar con una letra mayúscula. Encontrado: '${firstChar}'`
+        `La primera palabra empieza con '${firstChar}', pero debe comenzar con mayúscula.`
     );
+});
 
-    // Regla 3: Ninguna palabra tenga mayúsculas en un lugar que no sea la primera letra.
+test('3. Ninguna palabra debe tener mayúsculas intermedias o finales', () => {
+    const text = getTitleText();
+    const cleanText = text.replace(/^¡+/, '').replace(/!+$/, '').trim();
     const words = cleanText.split(/\s+/);
     for (const word of words) {
-        // Quitamos comas o puntos al final de la palabra para evaluarla limpiamente
         const cleanWord = word.replace(/[,;.:]$/, ''); 
         if (cleanWord.length > 1) {
             const restOfWord = cleanWord.slice(1);
-            // Comprobamos que el resto de la palabra esté completamente en minúsculas
             assert.strictEqual(
                 restOfWord, 
                 restOfWord.toLowerCase(), 
-                `La palabra "${word}" no debe contener mayúsculas intermedias o finales (solo la primera letra puede ser mayúscula).`
+                `La palabra "${word}" contiene mayúsculas incorrectas (solo se permite en la primera letra).`
             );
         }
     }
+});
 
-    // Regla 4: Todas las comas estén seguidas de espacios y precedidas por una letra.
+test('4. Todas las comas deben estar seguidas de espacios y precedidas por una letra', () => {
+    const text = getTitleText();
     let index = text.indexOf(',');
     while (index !== -1) {
-        // Verificar carácter anterior (debe ser una letra)
         const charBefore = text.charAt(index - 1);
         assert.match(
             charBefore, 
             /^[a-zA-ZáéíóúüñÁÉÍÓÚÜÑ]$/, 
-            `La coma en la posición ${index} debe estar precedida por una letra. Encontrado: '${charBefore}'`
+            `La coma en la posición ${index} está precedida por '${charBefore}' (debe ser una letra).`
         );
 
-        // Verificar carácter posterior (debe ser un espacio)
         const charAfter = text.charAt(index + 1);
         assert.strictEqual(
             charAfter, 
