@@ -10,7 +10,7 @@ function getTitleText() {
     return match[1];
 }
 
-test('1. Misma cantidad de ¡ al principio que ! al final', () => {
+test('Misma cantidad de ¡ al principio que ! al final', () => {
     const text = getTitleText();
     const startExclamations = (text.match(/^¡+/) || [''])[0].length;
     const endExclamations = (text.match(/!+$/) || [''])[0].length;
@@ -21,7 +21,7 @@ test('1. Misma cantidad de ¡ al principio que ! al final', () => {
     );
 });
 
-test('2. La primera palabra debe empezar con mayúscula', () => {
+test('La primera palabra debe empezar con mayúscula', () => {
     const text = getTitleText();
     const cleanText = text.replace(/^¡+/, '').replace(/!+$/, '').trim();
     const firstChar = cleanText.charAt(0);
@@ -32,7 +32,7 @@ test('2. La primera palabra debe empezar con mayúscula', () => {
     );
 });
 
-test('3. Ninguna palabra debe tener mayúsculas intermedias o finales', () => {
+test('Ninguna palabra debe tener mayúsculas intermedias o finales', () => {
     const text = getTitleText();
     const cleanText = text.replace(/^¡+/, '').replace(/!+$/, '').trim();
     const words = cleanText.split(/\s+/);
@@ -49,7 +49,7 @@ test('3. Ninguna palabra debe tener mayúsculas intermedias o finales', () => {
     }
 });
 
-test('4. Todas las comas deben estar seguidas de espacios y precedidas por una letra', () => {
+test('Todas las comas deben estar seguidas de espacios y precedidas por una letra', () => {
     const text = getTitleText();
     let index = text.indexOf(',');
     while (index !== -1) {
