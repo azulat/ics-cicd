@@ -38,12 +38,12 @@ jobs:
       - run:
           name: Deploy to Vercel
           command: |
-            if [  = main ]; then
-              echo Desplegando en Producción...
-              vercel deploy --prod --token= --yes
+            if [ "$CIRCLE_BRANCH" = "main" ]; then
+              echo "Desplegando en Producción..."
+              vercel deploy --prod --token=$VERCEL_TOKEN --yes
             else
-              echo Desplegando Preview para la rama ...
-              vercel deploy --token= --yes
+              echo "Desplegando Preview para la rama $CIRCLE_BRANCH..."
+              vercel deploy --token=$VERCEL_TOKEN --yes
             fi
 
 workflows:
