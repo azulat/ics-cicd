@@ -1,25 +1,26 @@
 version: 2.1
 
 jobs:
-  build:
+  test:
     docker:
       - image: cimg/node:current
     steps:
       - checkout
+
       # Instalamos dependencias
       - run:
           name: Install dependencies
           command: npm install
-      # Ejecutamos tests (descomenta si ya tienes un script de test configurado)
+
       - run:
           name: Run Tests / Linting
           command: |
             if npm run | grep -q test; then
               npm run test
             else
-              echo No se encontró un script de test en package.json. Saltando...
+              echo No se encontró un script de test en package.json
             fi
-      # Persistimos el directorio de trabajo para que el job de deploy tenga acceso a los archivos
+      
       - persist_to_workspace:
           root: .
           paths:
@@ -27,7 +28,7 @@ jobs:
 
   deploy:
     docker:
-      - image: cimg/node:current # Usamos Node también aquí para tener soporte nativo de npm
+      - image: cimg/node:current
     steps:
       # Recuperamos los archivos del paso anterior (ahorramos tiempo de checkout e install)
       - attach_workspace:
@@ -38,22 +39,15 @@ jobs:
       - run:
           name: Deploy to Vercel
           command: |
-            if [ "$CIRCLE_BRANCH" = "main" ]; then
-              echo "Desplegando en Producción..."
-              vercel deploy --prod --token=$VERCEL_TOKEN --yes
-            else
-              echo "Desplegando Preview para la rama $CIRCLE_BRANCH..."
-              vercel deploy --token=$VERCEL_TOKEN --yes
-            fi
+            echo "Desplegando.."
+            vercel deploy --prod --token=$VERCEL_TOKEN --yes
 
 workflows:
   version: 2
-  build_and_deploy:
+  test_and_deploy:
     jobs:
-      - build
+      - test
       - deploy:
           requires:
-            - build
-          # Quitamos el filtro 'only: main' para que las ramas secundarias 
-          # también se desplieguen como 'Previews' de Vercel. 
-          # La lógica dentro del job de deploy sabrá si es producción o no.
+            - test
+

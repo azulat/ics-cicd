@@ -4,10 +4,19 @@
   "description": "Un hola mundo básico en HTML",
   "main": "index.html",
   "scripts": {
-    "start": "npx serve .",
+    "build": "npx http-server -p 8080",
     "test": "node test.js"
   },
   "keywords": [],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/azulat/ics-cicd.git"
+  },
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/azulat/ics-cicd/issues"
+  },
+  "homepage": "https://github.com/azulat/ics-cicd#readme"
 }
