@@ -40,7 +40,7 @@ jobs:
           name: Deploy to Vercel
           command: |
             echo "Desplegando.."
-            vercel deploy --prod --token=$VERCEL_TOKEN --yes
+            npx vercel deploy --prod --token=$VERCEL_TOKEN --yes --no-wait
 
 workflows:
   version: 2
