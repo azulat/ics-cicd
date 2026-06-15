@@ -3,14 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Página de Inicio | Proyecto</title>
+    <meta name="description" content="Una hermosa página de bienvenida creada con diseño moderno y minimalista para el proyecto de Integración Continua.">
+    <title>Hola Mundo | Tomás Azula</title>
+    <!-- Importamos fuentes premium de Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-color: #ffffff;
-            --text-main: #1a1a1a;
-            --text-secondary: #666666;
-            --accent: #000000;
-            --border: #ececec;
+            --bg-dark: #070907;
+            --text-secondary: #a3b899;
+            --accent-start: #d9f99d; /* Verde amarillento brillante */
+            --accent-end: #22c55e;   /* Verde Spinetta */
+            --glow-color: rgba(217, 249, 157, 0.12);
         }
 
         * {
@@ -20,53 +25,127 @@
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-main);
-            line-height: 1.6;
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--bg-dark);
+            color: #ffffff;
+            min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            min-height: 100vh;
-            padding: 20px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Orbe de luz de fondo para dar profundidad */
+        .ambient-glow {
+            position: absolute;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, var(--glow-color) 0%, rgba(9, 9, 11, 0) 70%);
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 1;
+            pointer-events: none;
+            animation: pulseGlow 8s ease-in-out infinite alternate;
         }
 
         main {
-            max-width: 500px;
-            width: 100%;
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            padding: 2rem;
         }
 
-        .content {
-            border-left: 1px solid var(--accent);
-            padding-left: 24px;
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
         }
 
         h1 {
-            font-size: 1.5rem;
-            font-weight: 600;
-            letter-spacing: -0.02em;
-            margin-bottom: 8px;
+            font-size: clamp(3rem, 8vw, 5.5rem);
+            font-weight: 800;
+            line-height: 1.1;
+            letter-spacing: -0.04em;
+            background: linear-gradient(135deg, var(--accent-start) 0%, var(--accent-end) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1rem;
+            animation: fadeInScale 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            will-change: transform, opacity;
         }
 
         p {
-            font-size: 0.95rem;
+            font-size: clamp(0.9rem, 2.5vw, 1.1rem);
             color: var(--text-secondary);
+            font-weight: 600;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 1s cubic-bezier(0.16, 1, 0.3, 1) 0.5s forwards;
+            will-change: transform, opacity;
         }
 
-        footer {
-            margin-top: 32px;
-            font-size: 0.8rem;
-            color: var(--text-secondary);
-            border-top: 1px solid var(--border);
-            padding-top: 16px;
+        /* Decoración de línea sutil */
+        .divider {
+            width: 60px;
+            height: 2px;
+            background: linear-gradient(90deg, var(--accent-start), var(--accent-end));
+            margin-bottom: 1.5rem;
+            border-radius: 2px;
+            opacity: 0;
+            transform: scaleX(0);
+            animation: expandWidth 1s cubic-bezier(0.16, 1, 0.3, 1) 0.3s forwards;
+            will-change: transform, opacity;
+        }
+
+        /* Animaciones */
+        @keyframes fadeInScale {
+            from {
+                opacity: 0;
+                transform: scale(0.92) translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes expandWidth {
+            to {
+                opacity: 0.8;
+                transform: scaleX(1);
+            }
+        }
+
+        @keyframes pulseGlow {
+            0% {
+                transform: translate(-50%, -50%) scale(1);
+                opacity: 0.8;
+            }
+            100% {
+                transform: translate(-50%, -50%) scale(1.15);
+                opacity: 1;
+            }
         }
     </style>
 </head>
 <body>
-    <main>
-        <div class="content">
-            <h1>Integración y Entrega Continua</h1>
-            <p>Implementación técnica para pruebas de despliegue continuo y validación de entornos estáticos.</p>
+    <div class="ambient-glow" id="glow-orb"></div>
+    <main id="app-container">
+        <div class="container">
+            <h1 id="main-title">Hola, Mundo</h1>
         </div>
     </main>
 </body>
