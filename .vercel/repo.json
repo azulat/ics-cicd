@@ -1,0 +1,11 @@
+{
+  "remoteName": "origin",
+  "projects": [
+    {
+      "id": "prj_GBsepUaEU6T5EXQVVIj2jpu9UYlD",
+      "name": "ics-cicd",
+      "directory": ".",
+      "orgId": "team_j4VDoK9BcGuWmQLKlP1DXqBR"
+    }
+  ]
+}
