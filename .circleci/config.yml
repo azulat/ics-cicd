@@ -40,7 +40,9 @@ jobs:
           name: Deploy to Vercel
           command: |
             echo "Desplegando.."
-            npx vercel deploy --prod --token=$VERCEL_TOKEN --yes --no-wait
+            vercel pull --yes --environment=production --token=$VERCEL_TOKEN
+            vercel build --prod --token=$VERCEL_TOKEN
+            vercel deploy --prebuilt --prod --token=$VERCEL_TOKEN
 
 workflows:
   version: 2
@@ -50,4 +52,6 @@ workflows:
       - deploy:
           requires:
             - test
-
+          filters:
+            branches:
+              only: main
